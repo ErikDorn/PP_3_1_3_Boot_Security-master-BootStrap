@@ -1,26 +1,13 @@
 package org.kata.springbootbootstrap.controller;
 
 import org.kata.springbootbootstrap.model.User;
-
 import org.kata.springbootbootstrap.service.RoleServiceImpl;
-
 import org.kata.springbootbootstrap.service.UserServiceImpl;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.validation.Valid;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping
@@ -50,9 +37,9 @@ public class AdminController {
     }
 
     @PostMapping("/new")
-    public String createUser(@ModelAttribute("user")  User user) {
+    public String createUser(@ModelAttribute("user") User user) {
 
-        getUserRoles(user);
+        userService.getUserRoles(user);
         userService.saveUser(user);
         return "redirect:/admin";
     }
@@ -60,7 +47,7 @@ public class AdminController {
     @PutMapping("/{id}/update")
     public String updateUser(@ModelAttribute("user") User user, Model model) {
         model.addAttribute("roles", roleService.getAllRoles());
-        getUserRoles(user);
+        userService.getUserRoles(user);
         userService.updateUser(user);
         return "redirect:/admin";
     }
@@ -69,11 +56,5 @@ public class AdminController {
     public String deleteUser(@PathVariable("id") long id) {
         userService.deleteUser(id);
         return "redirect:/admin";
-    }
-
-    private void getUserRoles(User user) {
-        user.setRoles(user.getRoles().stream()
-                .map(role -> roleService.getRole(role.getName()))
-                .collect(Collectors.toSet()));
     }
 }
