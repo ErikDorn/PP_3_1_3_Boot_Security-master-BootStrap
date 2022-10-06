@@ -6,8 +6,9 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+
 @Repository
-public class RoleQuerySQL {
+public class RoleDAO {
     @PersistenceContext
     private EntityManager entityManager;
 
